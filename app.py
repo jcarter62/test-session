@@ -1,10 +1,18 @@
 from flask import Flask, redirect, session, render_template, request
 from flask_session import Session
+from flask_mongo_session.session_processor import MongoSessionProcessor
 import os
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = os.urandom(128)
+# app.config['SECRET_KEY'] = os.urandom(128)
+
+s_cookie_name = os.getenv('SESSION_COOKIE_NAME')
+s_host = os.getenv('SESSION_HOST')
+s_port = os.getenv('SESSION_PORT')
+s_db = os.getenv('SESSION_DB')
+app.session_cookie_name = s_cookie_name
+app.session_interface = MongoSessionProcessor('mongodb://%s:%s/%s' % (s_host, s_port, s_db))
 
 
 @app.route('/')
